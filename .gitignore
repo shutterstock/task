@@ -1,0 +1,10 @@
+*~
+MYMETA.*
+Makefile
+blib
+pm_to_blib
+local
+test_environment
+.carton
+/.build
+/fatlib

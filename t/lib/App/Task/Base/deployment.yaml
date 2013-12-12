@@ -1,0 +1,13 @@
+mainline_branch: master
+environments:
+  integration:
+    branch_name: integration
+  qa:
+    branch_name: qa
+    dependent_environment: integration
+  staging:
+    branch_name: staging
+    dependent_environment: qa
+  prod:
+    branch_name: master
+    dependent_environment: staging

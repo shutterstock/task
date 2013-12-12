@@ -1,0 +1,20 @@
+mainline_branch: master
+environments:
+  integration:
+    branch_name: integration
+    allow_ready: 0
+
+  qa:
+    branch_name: qa
+    dependent_environment: integration
+    allow_ready: 1
+
+  staging:
+    branch_name: staging
+    dependent_environment: qa
+    allow_ready: 1
+
+  prod:
+    branch_name: master
+    dependent_environment: staging
+    allow_ready: 1

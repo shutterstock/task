@@ -1,0 +1,7 @@
+- add more hook entry points
+- change mentions of master in the code to mainline_branch
+- sweep for explicit environment mentions in the code
+- test real use cases
+- make the default calls print out what git is running (and make it simple enough for normal users to understand)
+- write a setup (or init) command to give you sane default settings
+- support sending pull requests to github

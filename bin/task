@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+
+our $VERSION = "4.00";
+
+# DEVELOPERS: Read build.pl in the repo how to update this
+# __FATPACK__
+
+use strict;
+use warnings;
+use FindBin qw($Bin);                    # For dev -- Auto-removed
+use lib "$Bin/../lib", "$Bin/../fatlib"; # For dev -- Auto-removed
+$|++;
+
+use App::Task::Base;
+use App::Task::Command::Start;
+use App::Task::Command::Ready;
+use App::Task::Command::Deploy;
+use App::Task::Command::Status;
+use App::Task::Command::Cleanup;
+
+my $task = App::Task::Base->new;
+$task->run;

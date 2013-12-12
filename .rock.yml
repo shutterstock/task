@@ -1,0 +1,3 @@
+runtime: perl516
+
+test: exec prove -rl -It/lib t
