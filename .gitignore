@@ -8,3 +8,5 @@ test_environment
 .carton
 /.build
 /fatlib
+fatpacker.trace
+packlists
