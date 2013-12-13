@@ -43,6 +43,8 @@ if ($] < 5.010) {
 }
 
 open my $packlists, '<', 'packlists' or die "$! opening packlists";
+open my $out, '>', 'fatpack.packlist' or die "$! opening output packlist";
+
 chomp (my @packlists = <$packlists>);
 {
     local @ARGV = @packlists;
@@ -51,11 +53,11 @@ chomp (my @packlists = <$packlists>);
         next if /\.pod$/;
         next if /\.so$/;
         next if is_core(pm_to_mod($_));
-        print;
+        print $out $_;
     }
 }
 
-system('fatpack tree $(cat packlists)');
+system('fatpack tree fatpack.packlist');
 system('cp -r lib/* fatlib');
 
 mkdir ".build", 0777;
