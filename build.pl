@@ -37,7 +37,7 @@ if ($] < 5.010) {
 system('fatpack tree $(cat packlists)');
 system('cp -r lib/* fatlib');
 
-my $fatpack = `fatpack file bin/task`;
+my $fatpack = `fatpack file`;
 
 =begin disabled
 
