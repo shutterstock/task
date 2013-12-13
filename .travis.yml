@@ -1,3 +1,5 @@
+language: perl
+
 perl:
   - "5.18"
   - "5.16"
@@ -5,10 +7,18 @@ perl:
   - "5.12"
   - "5.10"
 
+env:
+  global:
+    - secure: "ifpEgDJHOAqxMiDUzw6iN4jP1PwE0/+V3jlcys+QTEJ8daGY3Pj+G0lsvPGhgaVhxxlwLthlK38BsW4b8amNyVqYNThUyzOmPGLNUufnq8b0BNVgoyqoodo1uz8TdPDLJ1MBdG0xEc4HlIeEua0PCVdPyNSEqpefuDmmQR4E2Ks="
+
 install:
   - "cpanm -nq -l local --installdeps --with-develop --with-recommends --with-suggests ."
   - "perl Makefile.PL"
   - "make"
+
+script:
   - "$PWD/local/bin/prove -lvr t"
   - "PERL5LIB=$PWD/local/lib/perl5 PATH=$PWD/local/bin:$PATH perl build.pl"
 
+#after_success:
+#  - "sh push_build.sh"
