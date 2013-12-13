@@ -76,7 +76,7 @@ sub run {
 	my $branch_name = $ready->run;
 	push(@branches, $branch_name);
 
-	# find out what's changed between the local task branch and remote env master
+	# find out what's changed between the local task branch and remote mainline
 	my @unpushed_files;
 	my @deployment_branches;
 	my $target_branch_name = $self->env->{branch_name};
@@ -90,9 +90,11 @@ sub run {
 	my @files = $self->content_tracker->get_changed_files($task_branch, "origin/$target_branch_name", branch_name => $deployment_branch_name);
 	push(@unpushed_files, @files);
 
+	my $mainline_branch = App::Task::Config->config->{mainline_branch};
+
 	# add all of the files that have been changed on the branch if we're redeploying
 	if (App::Task::Config->get_option('redeploy')) {
-		my ($file_list, $err, $exit_status) = App::Task::Base->system_call("git diff --name-only origin/master...$env_name/$deployment_branch_name", ignore_exit_status => 1);
+		my ($file_list, $err, $exit_status) = App::Task::Base->system_call("git diff --name-only origin/$mainline_branch...$env_name/$deployment_branch_name", ignore_exit_status => 1);
 		if (!$exit_status) {
 			chomp $file_list;
 
@@ -129,8 +131,8 @@ sub run {
 
 		for my $deployment_branch_name (@deployment_branches) {
 			# ready should have already put the content here, so now we just need to merge the branch into master
-			if ($env_name eq 'integration') {
-				$self->content_tracker->safe_merge($deployment_branch_name, $env_name, 'integration', '', 'deploy');
+			if (!$self->env->{allow_ready}) {
+				$self->content_tracker->safe_merge($deployment_branch_name, $env_name, $target_branch_name, '', 'deploy');
 			} else {
 				$self->content_tracker->safe_merge("origin/$env_name-ready/$deployment_branch_name", $env_name, $temp_branch_name, '--ff-only', 'deploy');
 			}
@@ -175,9 +177,6 @@ sub run {
 			$deployed_branches{$branch_name}++;
 		}
 
-		# TODO: run post-deploy hooks somewhere around here
-#		$self->run_hooks;
-
 		chomp( my ($deploy_sha) = App::Task::Base->system_call("git rev-parse HEAD") );
 
 		my $hooks_ok = App::Task::Hooks->run_hooks($self, 'post_deploy', {
@@ -199,7 +198,7 @@ sub run {
 			$self->merge_back_to_dependent_environments($env_name, $dependent_env_name);
 		}
 
-		# go back to where we started and make sure the integration refs are up-to-date
+		# go back to where we started
 		chdir $current_dir or highlighted_die "Couldn't chdir to: $current_dir";
 	};
 	if ($@) {
@@ -234,7 +233,8 @@ sub merge_back_to_dependent_environments {
 	App::Task::Base->system_call("git push origin '$temp_branch_name:$dependent_env_branch'");
 
 	# just get off of the branch so that we can delete it
-	App::Task::Base->system_call("git checkout master");
+	my $mainline_branch = App::Task::Config->config->{mainline_branch};
+	App::Task::Base->system_call("git checkout $mainline_branch");
 	App::Task::Base->system_call("git branch -D '$temp_branch_name'");
 
 	print "Merged changes from $top_level_env back to $dependent_env_name\n";

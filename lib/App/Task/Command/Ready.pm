@@ -86,7 +86,8 @@ sub run {
 	App::Task::Base->system_call("git checkout $original_branch");
 
 	my $remote_task_branch_name = '';
-	if ($env_name eq 'integration') {
+	my $allow_ready = $self->env->{allow_ready};
+	if (!$allow_ready) {
 		($remote_task_branch_name) = map { /^\s*(origin\/$deployment_branch_name)$/ims ? $1 : ()} `git branch -r`;
 	} else {
 		($remote_task_branch_name) = map { /^\s*(origin\/$env_name-ready\/$deployment_branch_name)$/ims ? $1 : ()} `git branch -r`;
@@ -94,7 +95,6 @@ sub run {
 
 	# create a temporary local branch to make sure your changes will apply
 	my $temp_branch_name = "temp_${env_name}_merge_$deployment_branch_name";
-	my $allow_ready = $self->env->{allow_ready};
 	eval {
 		my $diff_branch = $temp_branch_name;
 		my $env_branch_name = App::Task::Base->environments->{$env_name}{branch_name};
@@ -124,7 +124,6 @@ sub run {
 		$self->content_tracker->safe_merge($deployment_branch_name, $env_name, $temp_branch_name, '--no-ff --log', $remote_task_branch_name ? 're-ready' : 'ready');
 
 		# merge the remote env branch into the temp branch to make sure that it applies
-		# (but we want the raw branch with no merge on integration, so skip this there)
 		if ($allow_ready) {
 			$self->content_tracker->safe_merge("origin/$env_branch_name", $env_name, $temp_branch_name, '--no-ff --log', $remote_task_branch_name ? 're-ready' : 'ready');
 		}
@@ -135,7 +134,7 @@ sub run {
 		push(@ready_tasks, $task_branch);
 
 		# push your local version of the task branch to destination env remote
-		if ($env_name eq 'integration') {
+		if (!$allow_ready) {
 			App::Task::Base->system_call("git push origin 'HEAD:$deployment_branch_name'");
 		} else {
 			App::Task::Base->system_call("git push origin 'HEAD:$env_name-ready/$deployment_branch_name'");
