@@ -75,6 +75,8 @@ sub startup : Tests( startup => 1 ) {
 	`git clone git_repo developer_repo 2>&1`;
 	chmod 0777, 'developer_repo';
 	chdir "$data_dir/developer_repo";
+	`git config user.name "Task"`;
+	`git config user.email 'task\@example.com'`;
 	mkdir 'test';
 	my $filename = add_file('test/travis.txt', 'test test test');
 	mkdir 'hooks';
