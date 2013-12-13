@@ -37,15 +37,11 @@ if ($] < 5.010) {
 system('fatpack tree $(cat packlists)');
 system('cp -r lib/* fatlib');
 
-my $fatpack = `fatpack file`;
-
-=begin disabled
-
 mkdir ".build", 0777;
 
 system qw(cp -r fatlib .build/);
 
-my $fatpack_compact = do {
+my $fatpack = do {
     my $dir = pushd '.build';
 
     my @files;
@@ -56,7 +52,7 @@ my $fatpack_compact = do {
     find({ wanted => $want, no_chdir => 1 }, "fatlib", "lib");
     system 'perlstrip', '--cache', '-v', @files;
 
-    `fatpack file bin/task`;
+    `fatpack file`;
 };
 
 =end 
