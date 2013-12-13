@@ -18,4 +18,5 @@ on develop => sub {
 	requires 'Perl::Strip'     => 0.00;
 	requires 'File::Find'      => 0.00;
 	requires 'File::pushd'     => 0.00;
+	requires 'Module::CoreList' => 0.00;
 };

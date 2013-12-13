@@ -2,6 +2,7 @@
 use strict;
 use File::pushd;
 use File::Find;
+use Module::CoreList qw(is_core);
 
 sub generate_file {
     my($base, $target, $fatpack, $shebang_replace) = @_;
@@ -25,6 +26,13 @@ sub generate_file {
     rename "$target.tmp", $target;
 }
 
+sub pm_to_mod {
+    local $_ = shift;
+    s!/!::!g;
+    s/\.pm$//;
+    $_
+}
+
 system('fatpack trace bin/task');
 system('fatpack packlists-for $(cat fatpacker.trace) >> packlists');
 
@@ -32,6 +40,19 @@ system('fatpack packlists-for $(cat fatpacker.trace) >> packlists');
 system('fatpack packlists-for strictures.pm Moo.pm parent.pm >> packlists');
 if ($] < 5.010) {
     system('fatpack packlists-for Algorithm/C3.pm Class/C3.pm MRO/Compat.pm >> packlists');
+}
+
+open my $packlists, '<', 'packlists' or die "$! opening packlists";
+chomp (my @packlists = <$packlists>);
+{
+    local @ARGV = @packlists;
+    local $^I = "";
+    while (<>) {
+        next if /\.pod$/;
+        next if /\.so$/;
+        next if is_core(pm_to_mod($_));
+        print;
+    }
 }
 
 system('fatpack tree $(cat packlists)');
