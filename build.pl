@@ -26,18 +26,24 @@ sub generate_file {
 }
 
 system('fatpack trace bin/task');
-system('fatpack tree $(fatpack packlists-for $(cat fatpacker.trace))');
+system('fatpack packlists-for $(cat fatpacker.trace) >> packlists');
 
 # add some stuff to the fatlib to get Moo to fatpack
-system('fatpack tree $(fatpack packlists-for strictures.pm Moo.pm parent.pm)');
+system('fatpack packlists-for strictures.pm Moo.pm parent.pm >> packlists');
 if ($] < 5.010) {
-    system('fatpack tree $(fatpack packlists-for Algorithm/C3.pm Class/C3.pm MRO/Compat.pm)');
+    system('fatpack packlists-for Algorithm/C3.pm Class/C3.pm MRO/Compat.pm >> packlists');
 }
+
+system('fatpack tree $(cat packlists)');
+system('cp -r lib/* fatlib');
 
 my $fatpack = `fatpack file bin/task`;
 
+=begin disabled
+
 mkdir ".build", 0777;
-system qw(cp -r fatlib lib .build/);
+
+system qw(cp -r fatlib .build/);
 
 my $fatpack_compact = do {
     my $dir = pushd '.build';
@@ -50,8 +56,12 @@ my $fatpack_compact = do {
     find({ wanted => $want, no_chdir => 1 }, "fatlib", "lib");
     system 'perlstrip', '--cache', '-v', @files;
 
-    `fatpack file`;
+    `fatpack file bin/task`;
 };
 
-generate_file('bin/task', "task", $fatpack_compact);
+=end 
+
+=cut
+
+generate_file('bin/task', "task", $fatpack);
 chmod 0755, "task";
