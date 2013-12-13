@@ -19,6 +19,6 @@ BUILDDIR="build/perl-${TRAVIS_PERL_VERSION}"
 mkdir -p $BUILDDIR
 cp $HOME/task $BUILDDIR/task
 git add $BUILDDIR/task
-git commit -q -m "Travis build $TRAVIS_BUILD_NUMBER"
+git commit -q -m "Travis build $TRAVIS_BUILD_NUMBER for ${TRAVIS_PERL_VERSION}"
 git pull --rebase
 git push -q origin gh-pages >/dev/null 2>&1 || error_exit "Error pushing build to github"
