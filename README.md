@@ -1,6 +1,8 @@
 task
 ====
 
+A git-based release management tool. Developed at Shutterstock.
+
 Here's how I could get this to build:
 
     plenv install 5.8.9
