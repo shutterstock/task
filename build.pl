@@ -26,7 +26,11 @@ sub generate_file {
 }
 
 # add some stuff to the fatlib to get Moo to fatpack
-system('fatpack tree $(fatpack packlists-for strictures.pm Moo.pm Algorithm/C3.pm MRO/Compat.pm Class/C3.pm parent.pm)');
+system('fatpack tree $(fatpack packlists-for strictures.pm Moo.pm parent.pm)');
+if ($] < 5.010) {
+    system('fatpack tree $(fatpack packlists-for Algorithm/C3.pm Class/C3.pm MRO/Compat.pm)');
+}
+
 my $fatpack = `fatpack file bin/task`;
 
 mkdir ".build", 0777;
