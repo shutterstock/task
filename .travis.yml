@@ -19,7 +19,7 @@ install:
 
 script:
   - "prove -Ilocal/lib/perl5 -It/lib -lvr t"
-  - "PERL5LIB=$PWD/local/lib/perl5 PATH=$PWD/local/bin:$PATH perl build.pl"
 
 after_success:
+  - "PERL5LIB=$PWD/local/lib/perl5 PATH=$PWD/local/bin:$PATH perl build.pl"
   - "sh push_build.sh"
