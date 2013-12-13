@@ -501,8 +501,6 @@ no Types::Standard;
 sub usage {
 	my ($self, $message) = @_;
 
-	print "$message\n\n" if $message;
-
 	print <<"END_USAGE";
 Usage: task status [-h] <branch_name>
 
@@ -537,6 +535,8 @@ Options:
                              This will show diffs for entire environments, or
                              per log entry if used with --log.
 END_USAGE
+
+	print "\n$message\n" if $message;
 
 	exit 1;
 }

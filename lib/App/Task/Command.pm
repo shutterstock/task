@@ -21,6 +21,9 @@ around 'run' => sub {
 	my ($next, $self, %options) = @_;
 
 	my $original_branch = $self->content_tracker->get_current_branch;
+	if (!$original_branch) {
+		$self->usage("No branches yet! Create one to get started");
+	}
 	$self->content_tracker->update_remotes;
 
 	# eval the run and make sure we end up in the same place we started

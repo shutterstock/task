@@ -85,8 +85,6 @@ sub run {
 sub usage {
 	my ($self, $message) = @_;
 
-	print "$message\n\n" if $message;
-
 	print <<"END_USAGE";
 Usage: task cleanup [-hd] <branch_name>
 
@@ -114,6 +112,8 @@ Show local branches whose tips have existed on prod for at least 7 days
 
 Delete local branches whose tips have existed on prod for at least 7 days
 END_USAGE
+
+	print "\n$message\n" if $message;
 
 	exit 1;
 }

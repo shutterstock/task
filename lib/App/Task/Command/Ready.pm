@@ -176,8 +176,6 @@ sub run {
 sub usage {
 	my ($self, $message) = @_;
 
-	print "$message\n\n" if $message;
-
 	print <<"END_USAGE";
 Usage: task ready [-hn] environment <branch_name>
 
@@ -187,6 +185,8 @@ Options:
 
     -h, --help     Show a brief help message and exit
 END_USAGE
+
+	print "\n$message\n" if $message;
 
 	exit 1;
 }

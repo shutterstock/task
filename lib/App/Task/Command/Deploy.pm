@@ -30,7 +30,10 @@ sub BUILD {
 
 	my $branch_name = $self->env->{branch_name};
 	$self->content_tracker->update_remotes;
-	my ($branch_tip) = App::Task::Base->system_call("git rev-parse 'origin/$branch_name'");
+	my ($branch_tip, $err, $exit_status) = App::Task::Base->system_call("git rev-parse 'origin/$branch_name'", ignore_exit_status => 1);
+	if (!$branch_tip or $exit_status) {
+		$self->usage("No branch origin/$branch_name exists. Create it to do something useful");
+	}
 	chomp $branch_tip;
 
 	if (scalar @ARGV and !$self->task_branch) {
@@ -251,8 +254,6 @@ no Moo;
 sub usage {
 	my ($self, $message) = @_;
 
-	print "$message\n\n" if $message;
-
 	print <<"END_USAGE";
 Usage: task deploy [-hn] [--again] environment <branch_name>
 
@@ -267,6 +268,8 @@ Options:
                      will rerun your hooks for this environment without merging
                      anything
 END_USAGE
+
+	print "\n$message\n" if $message;
 
 	exit 1;
 }

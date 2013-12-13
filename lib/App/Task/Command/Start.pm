@@ -47,8 +47,6 @@ sub create_task_branch {
 sub usage {
 	my ($self, $message) = @_;
 
-	print "$message\n\n" if $message;
-
 	print <<"END_USAGE";
 Usage: task start [-h] <branch_name>
 
@@ -65,6 +63,8 @@ Examples:
     creates a branch feature/docs from origin/master
     or checks it out if someone else already created it
 END_USAGE
+
+	print "\n$message\n" if $message;
 
 	exit 1;
 }

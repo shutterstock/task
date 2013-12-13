@@ -154,7 +154,7 @@ END_USAGE
 
 	print "\nUse 'task <subcommand> --help' for more information\n";
 
-	print "\n$message\n\n" if $message;
+	print "\n$message\n" if $message;
 
 	exit 1;
 }
