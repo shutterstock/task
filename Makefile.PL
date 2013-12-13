@@ -21,7 +21,7 @@ WriteMakefile(
 		'Types::Standard'      => 0.00,
 	},
 	"TEST_REQUIRES" => {
-		"Test::Most"           => 0
+		"Test::Most"           => 0,
 		'Test::Class'          => 0.00,
 		'File::Slurp'          => 0.00,
 		'Carp'                 => 0.00,
