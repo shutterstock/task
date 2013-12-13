@@ -20,4 +20,5 @@ mkdir -p $BUILDDIR
 cp $HOME/task $BUILDDIR/task
 git add $BUILDDIR/task
 git commit -q -m "Travis build $TRAVIS_BUILD_NUMBER"
-git push -fq origin gh-pages >/dev/null 2>&1 || error_exit "Error pushing build to github"
+git pull --rebase
+git push -q origin gh-pages >/dev/null 2>&1 || error_exit "Error pushing build to github"
