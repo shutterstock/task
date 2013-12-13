@@ -34,6 +34,16 @@ sub pm_to_mod {
 }
 
 system('fatpack trace bin/task');
+
+{
+    local @ARGV = ('fatpacker.trace');
+    local $^I = ".bak";
+    while (<>) {
+        chomp;
+        print "$_\n" unless Module::CoreList::is_core(pm_to_mod($_));
+    }
+}
+
 system('fatpack packlists-for $(cat fatpacker.trace) >> packlists');
 
 # add some stuff to the fatlib to get Moo to fatpack
@@ -42,22 +52,7 @@ if ($] < 5.010) {
     system('fatpack packlists-for Algorithm/C3.pm Class/C3.pm MRO/Compat.pm >> packlists');
 }
 
-open my $packlists, '<', 'packlists' or die "$! opening packlists";
-open my $out, '>', 'fatpack.packlist' or die "$! opening output packlist";
-
-chomp (my @packlists = <$packlists>);
-{
-    local @ARGV = @packlists;
-    local $^I = "";
-    while (<>) {
-        next if /\.pod$/;
-        next if /\.so$/;
-        next if Module::CoreList::is_core(pm_to_mod($_));
-        print $out $_;
-    }
-}
-
-system('fatpack tree fatpack.packlist');
+system('fatpack tree $(cat packlists)');
 system('cp -r lib/* fatlib');
 
 mkdir ".build", 0777;
