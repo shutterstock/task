@@ -18,7 +18,7 @@ install:
   - "make"
 
 script:
-  - "prove -lvr t"
+  - "prove -It/lib -lvr t"
   - "PERL5LIB=$PWD/local/lib/perl5 PATH=$PWD/local/bin:$PATH perl build.pl"
 
 #after_success:
