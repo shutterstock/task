@@ -25,6 +25,9 @@ sub generate_file {
     rename "$target.tmp", $target;
 }
 
+system('fatpack trace bin/task');
+system('fatpack tree $(fatpack packlists-for $(cat fatpacker.trace))');
+
 # add some stuff to the fatlib to get Moo to fatpack
 system('fatpack tree $(fatpack packlists-for strictures.pm Moo.pm parent.pm)');
 if ($] < 5.010) {
