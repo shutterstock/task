@@ -11,7 +11,7 @@ has 'content_tracker' => ( is => 'ro', required => 1, isa => InstanceOf['App::Ta
 
 has 'task_branch' => ( is => 'rw' );
 has 'original_dir' => ( is => 'ro', default => sub { getcwd() }, reader => 'get_original_dir' );
-has 'allow_branch_switch' => ( is => 'rw', default => 0 );
+has 'allow_branch_switch' => ( is => 'rw', default => sub { 0 } );
 has 'deployment_branch' => ( is => 'rw', reader => 'get_deployment_branch', writer => 'set_deployment_branch' );
 
 requires 'run';
