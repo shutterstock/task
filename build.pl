@@ -2,7 +2,7 @@
 use strict;
 use File::pushd;
 use File::Find;
-use Module::CoreList qw(is_core);
+use Module::CoreList;
 
 sub generate_file {
     my($base, $target, $fatpack, $shebang_replace) = @_;
@@ -52,7 +52,7 @@ chomp (my @packlists = <$packlists>);
     while (<>) {
         next if /\.pod$/;
         next if /\.so$/;
-        next if is_core(pm_to_mod($_));
+        next if Module::CoreList::is_core(pm_to_mod($_));
         print $out $_;
     }
 }
