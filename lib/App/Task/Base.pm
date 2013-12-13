@@ -22,12 +22,16 @@ sub instance {
 
 sub BUILD {
 	my ($self, $args) = @_;
+	$instance = $self;
 
 	if (my $message = App::Task::Config->configure($args->{config_file})) {
-		usage($message);
+		if (grep { /--help|-h/ } @ARGV) {
+			# if the user is asking for help for a subcommand, give it to them
+			$self->run;
+		} else {
+			usage($message);
+		}
 	}
-
-	$instance = $self;
 
 	# use Getopt::Long to get the command line options
 	GetOptions(
@@ -133,8 +137,6 @@ sub environments {
 sub usage {
 	my ($message) = @_;
 
-	print "$message\n\n" if $message;
-
 	print <<"END_USAGE";
 Usage: task <subcommand>
 
@@ -152,6 +154,7 @@ END_USAGE
 
 	print "\nUse 'task <subcommand> --help' for more information\n";
 
+	print "\n$message\n\n" if $message;
 
 	exit 1;
 }

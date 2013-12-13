@@ -41,7 +41,10 @@ sub configure {
 	my ($package, $config_file) = @_;
 	undef %config_data;
 
-	my ($relative_to_root) = `git rev-parse --show-cdup`;
+	my ($relative_to_root) = `git rev-parse --show-cdup 2>/dev/null`;
+	if ($?) {
+		return "You are not in a git repository.";
+	}
 	chomp $relative_to_root;
 
 	if (!$config_file) {
@@ -49,7 +52,7 @@ sub configure {
 	}
 
 	if (-e $config_file && -r $config_file) {
-		my $repo_config = LoadFile $config_file or die "Couldn't load config file '$config_file";
+		my $repo_config = LoadFile $config_file or die "Couldn't load config file '$config_file'. Malformed yaml\n";
 
 		$config_data{environments} = $repo_config->{environments};
 		$config_data{mainline_branch} = $repo_config->{mainline_branch} || 'master';
