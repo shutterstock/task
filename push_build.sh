@@ -1,6 +1,6 @@
 #!/bin/sh
 
-function error_exit
+error_exit ()
 {
   echo "$*" 1>&2
   exit 1
@@ -16,7 +16,7 @@ git config user.name "Travis Automated Build"
 git config user.email "task@shutterstock.com"
 
 BUILDDIR="build/perl-${TRAVIS_PERL_VERSION}"
-mkdir -p $BUILDDIR/task
+mkdir -p $BUILDDIR
 cp $HOME/task $BUILDDIR/task
 git add $BUILDDIR/task
 git commit -q -m "Travis build $TRAVIS_BUILD_NUMBER"
