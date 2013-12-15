@@ -362,6 +362,9 @@ sub print_color {
 sub run {
 	my ($self) = @_;
 
+	App::Task::Config->set_option('needs-update' => 1);
+	$self->content_tracker->update_remotes;
+
 	if (my $branch = $self->task_branch) {
 		my $task_branch_name = $self->content_tracker->get_branch_name($branch);
 		my @deployment_branches = $self->content_tracker->get_all_deployment_branches( $branch );

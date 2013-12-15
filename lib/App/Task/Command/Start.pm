@@ -28,6 +28,7 @@ sub BUILD {
 sub run {
 	my ($self) = @_;
 
+	App::Task::Config->set_option('needs-update' => 1);
 	$self->content_tracker->update_remotes;
 
 	if (my $branch = $self->task_branch) {
