@@ -11,19 +11,21 @@ Task enforces a consistent development workfow and facilitates processes around 
 ## Example Workflow
 
 ```bash
-$ task start my-new-feature-branch
+$ task start my-feature-branch
 $ vi myfile
 $ git commit -a
-$ task status       # shows changes in this task branch
-$ task ready dev    # pre-merges into dev and pushes this branch to origin
-$ task deploy dev   # merges into dev and pushes dev up to origin
-$ task deploy qa    # merges and deploys to qa
-$ task deploy prod  # deploys to production and runs any associated hooks
+$ task status                         # shows changes in this task branch
+$ task ready dev my-feature-branch    # pre-merges into dev and pushes this branch to origin
+$ task deploy dev my-feature-branch   # merges into dev and pushes dev up to origin
+$ task deploy qa my-feature-branch    # merges and deploys to qa
+$ task deploy prod my-feature-branch  # deploys to production and runs any associated hooks
 ```
 
 ## Commands
 
-##### $ task start \<feature-branch-name\>
+Run with `--verbose` to see git operations involved with each subcommand
+
+##### $ task start \<branch-name\>
 
 Start work on a new or existing task branch
 
@@ -31,17 +33,19 @@ Start work on a new or existing task branch
 
 View the status of a task branch
 
-##### $ task ready \<environment-name\>
+##### $ task ready \<environment\> \<branch-name\>
 
 Pre-merge a task branch with an environment branch for later deployment
 
-##### $ task deploy \<environment-name\>
+##### $ task deploy \[--noconfirm \] \[--again\] \<environment\> \<branch-name\>
 
 Deploy a task branch to a given environment (and all its dependent envs too)
 
 ##### $ task cleanup
 
 Clean up branches that have been deployed or abandoned
+
+
 
 ## Configuration
 
@@ -124,5 +128,4 @@ http://code.shutterstock.com/task/build/perl-5.12/task<br>
 http://code.shutterstock.com/task/build/perl-5.14/task<br>
 http://code.shutterstock.com/task/build/perl-5.16/task<br>
 http://code.shutterstock.com/task/build/perl-5.18/task<br>
-
 
