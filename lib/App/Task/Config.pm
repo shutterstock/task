@@ -48,7 +48,7 @@ sub configure {
 	chomp $relative_to_root;
 
 	if (!$config_file) {
-		$config_file = ($relative_to_root ? "$relative_to_root/" : '') . 'deployment.yaml';
+		$config_file = "${relative_to_root}deployment.yaml";
 	}
 
 	if (-e $config_file && -r $config_file) {
@@ -62,7 +62,7 @@ sub configure {
 		return "Can't read config file: $config_file";
 	}
 
-	$config_data{repo_root} = $relative_to_root || ".";
+	$config_data{repo_root} = $relative_to_root;
 
 	# validate the config file
 	for my $env (keys %{$config_data{environments}}) {

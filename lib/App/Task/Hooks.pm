@@ -54,7 +54,7 @@ sub run_hook {
   my ($self, $command, $hook_name, $hook) = @_;
 
   my $root = App::Task::Config->config->{repo_root};
-  my $hook_path = "$root/$hook";
+  my $hook_path = "$root$hook";
 
   my $prelude = "Hook '$hook_path' for $hook_name";
 
