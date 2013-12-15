@@ -2,7 +2,7 @@
 
 # task
 
-A git-based release management tool. Developed at Shutterstock.
+A git-based release management tool. Developed at [Shutterstock](http://www.shutterstock.com).
 
 ## Introduction
 
@@ -10,7 +10,7 @@ Task enforces a consistent development workfow and facilitates processes around 
 
 ## Example Workflow
 
-```
+```bash
 $ task start my-new-feature-branch
 $ vi myfile
 $ git commit -a
@@ -23,23 +23,23 @@ $ task deploy prod  # deploys to production and runs any associated hooks
 
 ## Commands
 
-##### task start <feature-branch-name>
+##### $ task start \<feature-branch-name\>
 
 Start work on a new or existing task branch
 
-##### task status
+##### $ task status
 
 View the status of a task branch
 
-##### task ready <environment-name>
+##### $ task ready \<environment-name\>
 
 Pre-merge a task branch with an environment branch for later deployment
 
-##### task deploy <environment-name>
+##### $ task deploy \<environment-name\>
 
 Deploy a task branch to a given environment (and all its dependent envs too)
 
-##### task cleanup
+##### $ task cleanup
 
 Clean up branches that have been deployed or abandoned
 
@@ -47,7 +47,7 @@ Clean up branches that have been deployed or abandoned
 
 Put your task configuration in `deployment.yaml` at the root of your project.  Here's a sample configuration file:
 
-```
+```yaml
 environments:
   development:
     branch_name: dev
@@ -72,10 +72,10 @@ Specify the following options:
 
 Specify a mapping of environments.  Each environment value is itself a map specifying the following keys:
 
-- `branch\_name` - name of the long-lived branch associated with this environment
-- `dependent\_environment` - name of any lower environment which must contain a task/feature branch before it gets merged into this environment (optional)
+- `branch_name` - name of the long-lived branch associated with this environment
+- `dependent_environment` - name of any lower environment which must contain a task/feature branch before it gets merged into this environment (optional)
 - `hooks` - a mapping of hook names to sequences where each value in the sequence is an executable script to be run upon deployment to this environment (optional)
-- `allow\_ready` - allow pre-merging via "ready" branches for this environment (optional)
+- `allow_ready` - allow pre-merging via "ready" branches for this environment (optional)
 
 ##### github\_url
 
@@ -85,7 +85,7 @@ GitHub url for the origin repo.  Currently only used for generating "compare" UR
 
 A mapping of hook names to sequences where each value in the sequence is an executable script to be run upon deployment to any environment.  Optional.
 
-An executing hook script can find `TASK\_REPO\_ROOT`, `TASK\_DEPLOY\_SHA`, and `TASK\_DEPLOY\_ENVIRONMENT` in its environment.
+An executing hook script can find `TASK_REPO_ROOT`, `TASK_DEPLOY_SHA`, and `TASK_DEPLOY_ENVIRONMENT` in its environment.
 
 ##### mainline\_branch
 
@@ -93,7 +93,7 @@ Branch from which new task/feature branches should be cut.  Optional, defaults t
 
 ##### repo\_root
 
-Path to the root of the repository.  Optional, defaults to (`.`).
+Path to the root of the repository.  Optional, defaults to `.`.
 
 ## Building Task
 
@@ -118,11 +118,11 @@ $ ./build.pl
 
 You may want to use a pre-built fat-packed build of task for your version of Perl:
 
-[http://code.shutterstock.com/task/build/perl-5.8/task]<br>
-[http://code.shutterstock.com/task/build/perl-5.10/task]<br>
-[http://code.shutterstock.com/task/build/perl-5.12/task]<br>
-[http://code.shutterstock.com/task/build/perl-5.14/task]<br>
-[http://code.shutterstock.com/task/build/perl-5.16/task]<br>
-[http://code.shutterstock.com/task/build/perl-5.18/task]<br>
+http://code.shutterstock.com/task/build/perl-5.8/task<br>
+http://code.shutterstock.com/task/build/perl-5.10/task<br>
+http://code.shutterstock.com/task/build/perl-5.12/task<br>
+http://code.shutterstock.com/task/build/perl-5.14/task<br>
+http://code.shutterstock.com/task/build/perl-5.16/task<br>
+http://code.shutterstock.com/task/build/perl-5.18/task<br>
 
 
