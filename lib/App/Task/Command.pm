@@ -92,8 +92,7 @@ sub add_task {
 sub resolve_file {
 	my ($self, $path) = @_;
 
-	my $relative_to_root = `git rev-parse --show-cdup`;
-	chomp $relative_to_root;
+	my $relative_to_root = App::Task::Config->config->{repo_root};
 
 	# if the relative path isn't in git, assume it is a canonical path
 	# note that the file could be deleted, so we still have to check

@@ -368,8 +368,7 @@ sub get_conflicted_files {
 	chomp $output;
 	my @files = split("\n",$output);
 
-	my $relative_to_root = `git rev-parse --show-cdup`;
-	chomp $relative_to_root;
+	my $relative_to_root = App::Task::Config->config->{repo_root};
 
 	my @conflicted_files;
 	for my $file (@files) {
