@@ -8,11 +8,6 @@ perl:
   - "5.10"
   - "5.8"
 
-branches:
-  only:
-    - master
-    - /^smoke-me\//
-
 env:
   global:
     - secure: "ifpEgDJHOAqxMiDUzw6iN4jP1PwE0/+V3jlcys+QTEJ8daGY3Pj+G0lsvPGhgaVhxxlwLthlK38BsW4b8amNyVqYNThUyzOmPGLNUufnq8b0BNVgoyqoodo1uz8TdPDLJ1MBdG0xEc4HlIeEua0PCVdPyNSEqpefuDmmQR4E2Ks="
@@ -24,7 +19,8 @@ install:
 
 script:
   - "prove -Ilocal/lib/perl5 -It/lib -lvr t"
+  - "PERL5LIB=$PWD/local/lib/perl5:./lib PATH=$PWD/local/bin:$PATH perl build.pl"
+  - "sh test_fatpack.sh" # This should work without local or lib in PERL5LIB
 
 after_success:
-  - "PERL5LIB=$PWD/local/lib/perl5:./lib PATH=$PWD/local/bin:$PATH perl build.pl"
   - "sh push_build.sh"
