@@ -80,7 +80,7 @@ sub _create_branch {
 
 		# set upstream only for task branches off of the mainline
 		if ($start_ref eq "origin/$mainline_branch") {
-			App::Task::Base->system_call("git branch --set-upstream $branch_name $start_ref");
+			App::Task::Base->system_call("git push --set-upstream origin $branch_name");
 		}
 	}
 
