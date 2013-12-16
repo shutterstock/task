@@ -150,7 +150,7 @@ sub a_verbosity : Tests(5) {
 	}
 }
 
-sub add_and_push : Tests(17) {
+sub add_and_push : Tests(18) {
 	my ($test) = @_;
 	$test->log_test_start;
 
@@ -161,6 +161,9 @@ sub add_and_push : Tests(17) {
 		my $task = App::Task::Base->new(%base_args);
 		stdout_like { $task->run } qr/Created and switched to branch 'todo\/$todo_id' from origin\/master\n/ims, 'Create a new task branch';
 	}
+
+	chomp(my($upstream) = `git config branch.todo/$todo_id.merge`);
+	is $upstream, "refs/heads/todo/$todo_id";
 
 	mkdir 'test';
 	chdir 'test';
