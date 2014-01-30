@@ -86,6 +86,9 @@ sub usage {
 	my ($self, $message) = @_;
 	print <<"END_USAGE";
 Usage: task revert <environment> <branch_name>
+
+Experimental and not yet tested.
+
 END_USAGE
 
 	print "\n$message\n" if $message;
