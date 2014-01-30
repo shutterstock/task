@@ -99,13 +99,9 @@ sub get_status {
 
 	my $mainline_branch = App::Task::Config->config->{mainline_branch};
 
-	# If the task is merged to master, find a point on master *before* it was merged.
-	# Then the common ancestor of the branch tip and that point will be the point of divergence.
-	chomp(my ($merged_to_master) = App::Task::Base->system_call("git rev-list -n 1 origin/$mainline_branch ^$task_branch_name"));
-	my $master_before_merge = $merged_to_master ? "$merged_to_master^" : "origin/$mainline_branch";
-	chomp(my ($merge_base) = App::Task::Base->system_call("git merge-base $master_before_merge $task_branch_name"));
+	my $start = $self->content_tracker->get_branch_start($task_branch_name);
 
-	my $start = $merge_base;
+	$self->die_no_commits($task_branch_name) unless defined $start;
 
 	my $definitive_branch = $task_branch_name;
 	my @branch_commits    = $self->get_rev_list($start, $definitive_branch);

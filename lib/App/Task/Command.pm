@@ -98,7 +98,7 @@ sub resolve_file {
 	# note that the file could be deleted, so we still have to check
 	if (-e $path) {
 		if ($relative_to_root) {
-			return abs2rel(abs_path(rel2abs $path), $self->content_tracker->get_repository_root);
+			return abs2rel(abs_path(rel2abs($path)), $self->content_tracker->get_repository_root);
 		} else {
 			return $path;
 		}
