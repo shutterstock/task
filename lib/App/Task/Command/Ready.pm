@@ -84,6 +84,7 @@ sub run {
 
 	# make sure we are where we started
 	App::Task::Base->system_call("git checkout $original_branch");
+	$self->content_tracker->_clear_current_branch;
 
 	my $remote_task_branch_name = '';
 	my $allow_ready = $self->env->{allow_ready};
@@ -102,13 +103,16 @@ sub run {
 		if ($remote_task_branch_name) {
 			# make a local copy of the remote task branch if it exists
 			App::Task::Base->system_call("git checkout -b $temp_branch_name $remote_task_branch_name");
+			$self->content_tracker->_clear_current_branch;
 		} elsif ($allow_ready) {
 			# branch off the remote env branch if there isn't a remote task branch and we are
 			# pre-merging so that people deploying to higher envs won't have merge conflicts
 			App::Task::Base->system_call("git checkout -b $temp_branch_name origin/$env_branch_name");
+			$self->content_tracker->_clear_current_branch;
 		} else {
 			# if we aren't pre-merging, then just use the branch we're pushing
 			App::Task::Base->system_call("git checkout -b $temp_branch_name $deployment_branch_name");
+			$self->content_tracker->_clear_current_branch;
 			$diff_branch = "origin/$env_branch_name";
 		}
 
@@ -141,11 +145,13 @@ sub run {
 		}
 		App::Task::Base->system_call("git checkout $original_branch");
 		App::Task::Base->system_call("git branch -D $temp_branch_name");
+		$self->content_tracker->_clear_current_branch;
 	};
 	if ($@) {
 		# make sure we clean up, even if we fail
 		App::Task::Base->system_call("git checkout $original_branch");
 		App::Task::Base->system_call("git branch -D $temp_branch_name", ignore_exit_status => 1);
+		$self->content_tracker->_clear_current_branch;
 
 		# re-throw merge conflicts
 		App::Task::Base->instance->highlighted_die($@);

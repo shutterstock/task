@@ -130,6 +130,7 @@ sub run {
 		my $temp_branch_name = "temp_deploy_${env_name}";
 		# checkout a copy of the remote master for copying/rsyncing
 		App::Task::Base->system_call("git checkout --track -b '$temp_branch_name' origin/$target_branch_name");
+		$self->content_tracker->_clear_current_branch;
 		$temp_branch_exists = 1;
 
 		for my $deployment_branch_name (@deployment_branches) {
@@ -157,7 +158,8 @@ sub run {
 
 				App::Task::Base->system_call("git checkout $original_branch");
 				App::Task::Base->system_call("git branch -D 'temp_deploy_$env_name'");
-				exit;
+				$self->content_tracker->_clear_current_branch;
+				die "Aborted by user";
 			}
 		}
 
@@ -170,6 +172,7 @@ sub run {
 		# TODO: put in an END block so we can clean up after failure or ^c
 		App::Task::Base->system_call("git checkout $original_branch");
 		App::Task::Base->system_call("git branch -d 'temp_deploy_$env_name'");
+		$self->content_tracker->_clear_current_branch;
 		$temp_branch_exists = 0;
 
 		my $current_dir = getcwd;
@@ -210,6 +213,7 @@ sub run {
 
 		App::Task::Base->system_call("git checkout $original_branch");
 		App::Task::Base->system_call("git branch -D 'temp_deploy_$env_name'") if $temp_branch_exists;
+		$self->content_tracker->_clear_current_branch;
 
 		# and propagate the error
 		die $@;
@@ -229,6 +233,7 @@ sub merge_back_to_dependent_environments {
 
 	my $temp_branch_name = "temp_merge_${top_level_env}_back_to_${dependent_env_name}";
 	App::Task::Base->system_call("git checkout -b '$temp_branch_name' origin/$dependent_env_branch");
+	$self->content_tracker->_clear_current_branch;
 
 	$self->content_tracker->safe_merge("origin/$top_level_env_branch", $dependent_env_name, "origin/$dependent_env_branch", '', '');
 
@@ -239,6 +244,7 @@ sub merge_back_to_dependent_environments {
 	my $mainline_branch = App::Task::Config->config->{mainline_branch};
 	App::Task::Base->system_call("git checkout $mainline_branch");
 	App::Task::Base->system_call("git branch -D '$temp_branch_name'");
+	$self->content_tracker->_clear_current_branch;
 
 	print "Merged changes from $top_level_env back to $dependent_env_name\n";
 

@@ -67,14 +67,17 @@ sub _create_branch {
 		# check if the branch name exists
 		# and switch to it if it does
 		my ($output) = App::Task::Base->system_call("git checkout $branch_name", combine => 1);
+		$self->_clear_current_branch;
 		print $output;
 	} elsif (scalar grep { /^remotes\/origin\/\Q$branch_name\E$/i } @branches) {
 		# if it exists on origin, then just check that out
 		my ($output) = App::Task::Base->system_call("git checkout --track -b $branch_name origin/$branch_name");
+		$self->_clear_current_branch;
 		print $output;
 	} else {
 		# or create it if it doesn't
 		App::Task::Base->system_call("git checkout --no-track -b $branch_name $start_ref");
+		$self->_clear_current_branch;
 
 		print "Created and switched to branch '$branch_name' from $start_ref\n";
 
@@ -134,6 +137,7 @@ sub _add_files_to_branch {
 
 	# switch back to the original branch
 	App::Task::Base->system_call("git checkout $original_branch");
+	$self->_clear_current_branch;
 
 	chdir $current_dir;
 
