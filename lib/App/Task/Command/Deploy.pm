@@ -97,7 +97,8 @@ sub run {
 
 	# add all of the files that have been changed on the branch if we're redeploying
 	if (App::Task::Config->get_option('redeploy')) {
-		my ($file_list, $err, $exit_status) = App::Task::Base->system_call("git diff --name-only origin/$mainline_branch...$env_name/$deployment_branch_name", ignore_exit_status => 1);
+		my $branch_start = $self->content_tracker->get_branch_start($deployment_branch_name);
+		my ($file_list, $err, $exit_status) = App::Task::Base->system_call("git diff --name-only $branch_start...$env_name/$deployment_branch_name", ignore_exit_status => 1);
 		if (!$exit_status) {
 			chomp $file_list;
 

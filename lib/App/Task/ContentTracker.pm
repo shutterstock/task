@@ -397,6 +397,38 @@ sub update_remotes {
 	}
 }
 
+# Get the newer of the remote head or the local head for a branch
+# we may not be on.
+sub get_branch_head {
+	my $self = shift;
+	my $branch = shift;
+
+	my @branches = @{ $self->all_branches };
+	my @exist = grep m{^(?:remotes/origin/)?\Q$branch\E$}, @branches;
+
+	if (@exist == 0) {
+		return;
+	} elsif (@exist == 1) {
+		return $exist[0];
+	} else {
+		chomp(my @newest = `git rev-list --max-count=1 @exist`);
+		return $newest[0];
+	}
+}
+
+sub get_branch_start {
+	my $self = shift;
+	my $branch = shift;
+
+	my $branch_head = $self->get_branch_head($branch);
+	return unless $branch_head;
+	chomp (my @on_branch = `git rev-list --first-parent $branch_head`);
+	chomp (my @on_master = `git rev-list --first-parent origin/master`);
+	my %on_branch;
+	@on_branch{@on_branch} = ();
+	my ($first_in_common) = grep exists $on_branch{$_}, @on_master;
+	return $first_in_common;
+}
 
 1;
 __END__
