@@ -56,6 +56,11 @@ sub BUILD {
 			$self->set_deployment_branch($deployment_branch);
 		}
 	}
+	# if there isn't any task, default to the current branch
+	if (!$self->task_branch) {
+		my $current_branch = $self->content_tracker->get_current_branch;
+		$self->add_task( $current_branch );
+	}
 }
 
 sub run {
