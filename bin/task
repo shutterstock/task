@@ -17,6 +17,7 @@ use App::Task::Command::Ready;
 use App::Task::Command::Deploy;
 use App::Task::Command::Status;
 use App::Task::Command::Cleanup;
+use App::Task::Command::Revert;
 
 my $task = App::Task::Base->new;
 $task->run;
