@@ -74,6 +74,13 @@ sub run {
 	TASK:
 	my $task_branch = $self->task_branch;
 
+	my $hooks_ok = App::Task::Hooks->run_hooks($self, 'pre_deploy', {
+			TASK_DEPLOY_ENVIRONMENT => $env_name,
+			TASK_DEPLOY_BRANCH => $task_branch,
+	});
+
+	die "Failed to run hooks" unless $hooks_ok;
+
 	my $ready = App::Task::Command::Ready->new(
 		destination_environment => $self->env->{name},
 		content_tracker         => $self->content_tracker,
@@ -194,6 +201,7 @@ sub run {
 		my $hooks_ok = App::Task::Hooks->run_hooks($self, 'post_deploy', {
 				TASK_DEPLOY_ENVIRONMENT => $env_name,
 				TASK_DEPLOY_SHA => $deploy_sha,
+				TASK_DEPLOY_BRANCH => $task_branch,
 		});
 
 		die "Failed to run hooks" unless $hooks_ok;
