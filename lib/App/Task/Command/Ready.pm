@@ -18,6 +18,9 @@ sub BUILD {
 	# get the env from the command line
 	$self->set_environment($args->{destination_environment});
 
+	App::Task::Config->set_option('needs-update' => 1);
+	$self->content_tracker->update_remotes;
+
 	if (scalar @ARGV and !$self->task_branch) {
 
 		my @files;
