@@ -422,8 +422,8 @@ sub get_branch_start {
 
 	my $branch_head = $self->get_branch_head($branch);
 	return unless $branch_head;
-	chomp (my @on_branch = `git rev-list --first-parent $branch_head`);
-	chomp (my @on_master = `git rev-list --first-parent origin/master`);
+	chomp (my @on_branch = `git rev-list $branch_head`);
+	chomp (my @on_master = `git rev-list origin/master`);
 	my %on_branch;
 	@on_branch{@on_branch} = ();
 	my ($first_in_common) = grep exists $on_branch{$_}, @on_master;
