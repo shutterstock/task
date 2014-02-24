@@ -29,6 +29,7 @@ sub BUILD {
 	$self->set_environment($args->{destination_environment});
 
 	my $branch_name = $self->env->{branch_name};
+	App::Task::Config->set_option('needs-update' => 1);
 	$self->content_tracker->update_remotes;
 	my ($branch_tip, $err, $exit_status) = App::Task::Base->system_call("git rev-parse 'origin/$branch_name'", ignore_exit_status => 1);
 	if (!$branch_tip or $exit_status) {
