@@ -252,8 +252,12 @@ sub merge_back_to_dependent_environments {
 
 	$self->content_tracker->safe_merge("origin/$top_level_env_branch", $dependent_env_name, "origin/$dependent_env_branch", '', '');
 
-	# push changes back to dependent env repository
-	App::Task::Base->system_call("git push origin '$temp_branch_name:$dependent_env_branch'");
+	my ($changed_files) = App::Task::Base->system_call("git diff --name-only origin/$dependent_env_branch");
+	
+	if ($changed_files =~ /\S/) {
+		# push changes back to dependent env repository if anything changed
+		App::Task::Base->system_call("git push origin '$temp_branch_name:$dependent_env_branch'");
+	}
 
 	# just get off of the branch so that we can delete it
 	my $mainline_branch = App::Task::Config->config->{mainline_branch};
