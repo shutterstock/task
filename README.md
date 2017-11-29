@@ -129,3 +129,6 @@ http://code.shutterstock.com/task/build/perl-5.14/task<br>
 http://code.shutterstock.com/task/build/perl-5.16/task<br>
 http://code.shutterstock.com/task/build/perl-5.18/task<br>
 
+## License
+
+[MIT](LICENSE) © 2017 Shutterstock Inc.
